@@ -1,0 +1,10 @@
+{
+    "name": "window-communication-example",
+    "main": "index.html",
+    "scripts": {
+        "start": "nw ."
+    },
+    "devDependencies": {
+        "nw": "sdk"
+    }
+}

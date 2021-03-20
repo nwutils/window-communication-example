@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Main</title>
+    <script>
+      global.windowCommunication = {
+        main: {
+          window: window,
+          document: window.document,
+          dataChanged: function (data) {
+            console.log('data changed', data);
+          },
+          alert: function (message) {
+            window.alert(message);
+          }
+        },
+        settings: {},
+        shared: {}
+      };
+      nw.Window.open('settings.html', {}, function (win) {
+        global.windowCommunication.settings.window = win.window;
+        global.windowCommunication.settings.document = win.window.document;
+        global.windowCommunication.settings.dataChanged = function (data) {
+          win.window.console.log('data changed', data);
+        };
+        global.windowCommunication.settings.alert = function (message) {
+          win.window.alert(message);
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Main</h1>
+
+    <button onclick="global.windowCommunication.settings.alert('This came from the main window')">
+      Send alert to settings window.
+    </button>
+  </body>
+</html>
