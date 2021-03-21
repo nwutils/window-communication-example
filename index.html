@@ -3,10 +3,17 @@
   <head>
     <title>Main</title>
     <script>
+      // Set up a global object that all windows can use for communication
       global.windowCommunication = {
+        // This is for stuff specific to the main window
         main: {
           window: window,
           document: window.document,
+          // This is like a callback function, so the main window can be notified
+          // of global data changing by other windows.
+          // You could even have one main function that globally gets called and
+          // it in turn calls the `dataChanged` for all windows (in this case,
+          // just main and settings)
           dataChanged: function (data) {
             console.log('data changed', data);
           },
@@ -14,9 +21,17 @@
             window.alert(message);
           }
         },
+        // This is for stuff specific to the settings window
         settings: {},
+        // This is for stuff shard across windows
         shared: {}
       };
+
+      // Here there main window is spawning the setting window.
+      // I've chose to have the callback function register this window on the
+      // global windowCommunication object, so it can be accessed by any other
+      // window. I could have also had this code run once in the other window
+      // instead.
       nw.Window.open('settings.html', {}, function (win) {
         global.windowCommunication.settings.window = win.window;
         global.windowCommunication.settings.document = win.window.document;
