@@ -1,0 +1,13 @@
+body {
+    background: #EEF;
+    color: #004;
+    font-family: Trebuchet MS, sans-serif;
+}
+button {
+    background: #FFF;
+    border: 2px groove #CCF;
+    border-radius: 8px;
+    margin: 4px;
+    padding: 8px;
+    color: #004;
+}

@@ -1,10 +1,16 @@
 {
     "name": "window-communication-example",
     "main": "index.html",
+    "window": {
+        "width": 340,
+        "height": 300
+    },
     "scripts": {
         "start": "nw ."
     },
     "devDependencies": {
         "nw": "sdk"
-    }
+    },
+    "license": "MIT",
+    "repository": "https://github.com/nwutils/window-communication-example"
 }

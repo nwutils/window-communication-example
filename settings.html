@@ -2,11 +2,23 @@
 <html>
   <head>
     <title>Settings</title>
+    <link id="theme" rel="stylesheet" href="light.css">
+    <script src="shared.js"></script>
   </head>
   <body>
     <h1>Settings</h1>
-    <button onclick="global.windowCommunication.main.alert('This came from the settings window')">
-      Send alert to main window.
-    </button>
+    <div>
+      <button onclick="global.windowCommunication.main.alert('This came from the settings window')">
+        Send alert to main window.
+      </button>
+    </div>
+    <div>
+      <button onclick="updateZoom(-0.5)">Decrease Zoom</button>
+      <button onclick="updateZoom(0.5)">Increase Zoom</button>
+    </div>
+    <div>
+      <button onclick="useTheme('dark')">Use Dark Theme</button>
+      <button onclick="useTheme('light')">Use Light Theme</button>
+    </div>
   </body>
 </html>

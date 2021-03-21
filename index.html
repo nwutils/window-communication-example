@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Main</title>
+    <link id="theme" rel="stylesheet" href="light.css">
     <script>
       // Set up a global object that all windows can use for communication
       global.windowCommunication = {
@@ -11,44 +12,70 @@
           document: window.document,
           // This is like a callback function, so the main window can be notified
           // of global data changing by other windows.
-          // You could even have one main function that globally gets called and
-          // it in turn calls the `dataChanged` for all windows (in this case,
-          // just main and settings)
-          dataChanged: function (data) {
-            console.log('data changed', data);
+          dataChanged: function () {
+            global.windowCommunication.shared.updateZoomLevel(nw.Window.get());
+            global.windowCommunication.shared.updateTheme('main');
           },
           alert: function (message) {
             window.alert(message);
           }
         },
         // This is for stuff specific to the settings window
-        settings: {},
+        settings: {
+          dataChanged: function () {}
+        },
         // This is for stuff shard across windows
-        shared: {}
+        shared: {
+          zoomLevel: 0,
+          theme: 'dark',
+          dataChanged: function () {
+            global.windowCommunication.main.dataChanged();
+            global.windowCommunication.settings.dataChanged();
+          },
+          updateZoomLevel: function (nwWin) {
+            nwWin.zoomLevel = this.zoomLevel;
+          },
+          updateTheme: function (windowTitle) {
+            let link = global.windowCommunication[windowTitle].document.getElementById('theme');
+            link.setAttribute('href', this.theme + '.css');
+          }
+        }
       };
 
       // Here there main window is spawning the setting window.
-      // I've chose to have the callback function register this window on the
+      // I've chosen to have the callback function register this window on the
       // global windowCommunication object, so it can be accessed by any other
       // window. I could have also had this code run once in the other window
       // instead.
-      nw.Window.open('settings.html', {}, function (win) {
+      nw.Window.open('settings.html', null, function (win) {
         global.windowCommunication.settings.window = win.window;
         global.windowCommunication.settings.document = win.window.document;
-        global.windowCommunication.settings.dataChanged = function (data) {
-          win.window.console.log('data changed', data);
+        global.windowCommunication.settings.dataChanged = function () {
+          global.windowCommunication.shared.updateZoomLevel(win);
+          global.windowCommunication.shared.updateTheme('settings');
         };
         global.windowCommunication.settings.alert = function (message) {
           win.window.alert(message);
         }
       });
     </script>
+    <script src="shared.js"></script>
   </head>
   <body>
     <h1>Main</h1>
-
-    <button onclick="global.windowCommunication.settings.alert('This came from the main window')">
-      Send alert to settings window.
-    </button>
+    <div>
+      <button onclick="global.windowCommunication.settings.alert('This came from the main window')">
+        Send alert to settings window.
+      </button>
+    </div>
+    <div>
+      <button onclick="updateZoom(-0.5)">Decrease Zoom</button>
+      <button onclick="updateZoom(0.5)">Increase Zoom</button>
+    </div>
+    <div>
+      <button onclick="useTheme('dark')">Use Dark Theme</button>
+      <button onclick="useTheme('light')">Use Light Theme</button>
+    </div>
   </body>
 </html>
+
